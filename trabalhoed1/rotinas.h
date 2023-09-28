@@ -1,17 +1,9 @@
 #include <stdlib.h>
 #include <time.h>
 
-int ClienteChegou() {
-
-  time_t t;
-  srand((unsigned)time(&t));
-
-  return rand() % 3;
-}
+int ClienteChegou() { return rand() % 3; }
 
 int Transacao() {
-  time_t t;
-  srand((unsigned)time(&t));
 
   int transacao = rand() % 5;
 
@@ -26,5 +18,7 @@ int Transacao() {
     return 40;
   case 4:
     return 50;
+  default:
+    return -1;
   }
 }

@@ -4,22 +4,63 @@
 
 #define FINAL 100
 
-int crono, espera, totcli, client;
-int caixa[3];
+int espera, totcli, client;
+int caixa[3] = {0, 0, 0};
 struct T_Fila fila;
-struct T_Item item;
+struct T_Item crono;
 
 int main(void) {
 
-  crono = 0, espera = 0, totcli = 0;
+  srand((unsigned)time(NULL));
+
+  espera = 0, totcli = 0;
+  crono.campo = 0;
 
   iniciarFila(&fila);
 
-  while (crono < FINAL) {
+  while (crono.campo < FINAL) {
 
     if (ClienteChegou()) {
 
       inserir(&fila, crono);
+
+      totcli++;
     }
+
+    for (int i = 0; i < 3; i++) {
+
+      if (!chkFilaVazia(&fila) && caixa[i] == 0) {
+
+        client = remover(&fila);
+
+        espera += (crono.campo - client);
+
+        caixa[i] = Transacao();
+      }
+    }
+
+    for (int i = 0; i < 3; i++) {
+
+      if (caixa[i] != 0) {
+        caixa[i]--;
+      }
+    }
+
+    crono.campo++;
   }
+
+  printf("Tempo de atendimento: %d\n", FINAL);
+  printf("Total de clientes: %d\n", totcli);
+  printf("Tempo total de espera: %d\n", espera);
+
+  if (totcli > 0) {
+    double tempomedioespera = ((double)espera / totcli);
+    printf("Tempo medio de espera: %f\n\n", tempomedioespera);
+
+  } else {
+
+    printf("Sem tempo medio de espera, nenhum cliente esteve na fila.\n\n");
+  }
+
+  return 0;
 }

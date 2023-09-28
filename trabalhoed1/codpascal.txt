@@ -1,0 +1,84 @@
+program FilaCaixa;
+uses Filas;
+const FINAL = 100;
+var crono, espera, totcli, client : integer;
+	caixa:array[1..3] of integer;
+	filcx: Fila;
+
+{inserir aqui as rotinas ClienteChegou() e Transacao()}
+
+begin
+	crono := 0;
+espera := 0; 
+	totcli := 0;
+
+	Qinit(filcx);
+
+	// INICIALIZAR VETOR CAIXA
+
+	for i:=1 to 3 caixa[i] := 0;
+
+	while (crono < FINAL) do
+	begin
+		if (ClienteChegou) then
+		begin
+		
+		// CLIENTE ENTRA NA FILA E HORARIO E ANOTADO:
+		// O QUE ESTA ACONTECENDO: FILA RECEBE UM VALOR INTEIRO: O TEMPO EM
+		// QUE O CLIENTE CHEGOU
+
+			Enqueue(filcx, crono);
+
+		// REGISTRO DO TOTAL DE CLIENTES PARA CALCULO DE TEMPO MEDIO DEPOIS
+
+			Inc(totcli);
+		end;
+
+		for i:=1 to 3 do
+		begin
+
+			// FILA TEM ALGUEM, CAIXA LIVRE: ATENDER
+
+			if (not QisEmpty(filcx)) and (Caixa[i]=0) then
+			begin
+
+			// VERIFICAR QUANTO TEMPO CLIENTE AGUARDOU, ACUMULAR.
+
+			// CLIENTE SAI DA FILA
+			// VARIAVEL client: TEMPO QUE O CLIENTE ENTROU NA FILA
+			// (MESMO VALOR QUE FOI ADICIONADO AO VETOR ANTERIORMENTE)
+
+				client := Dequeue(filcx);
+
+			// VARIAVEL espera: TEMPO DE ESPERA DE TODOS CLIENTES ACUMULADO
+			// espera RECEBE TEMPO ANOTADO - TEMPO QUE O CLIENTE ENTROU NA
+			// FILA
+
+				inc(espera, (crono - client));
+
+			// caixa RECEBE O TEMPO DA TRANSACAO CORRESPONDENTE
+			// DETERMINA POR QUANTO TEMPO O CAIXA PERMANECE OCUPADO
+
+				caixa[i] := Transacao();
+			end;
+		end;
+
+		for i:=1 to 3 do
+		begin
+
+			// SE O CAIXA ESTA OCUPADO, DECREMENTAR EM 1
+
+			if (caixa[i] <> 0) then dec(Caixa[i]);
+		end;
+
+		// TEMPO INCREMENTADO EM 1, ATE CHEGAR AO FINAL "FINAL"
+	
+		inc(crono);
+
+	end;
+
+	writeln(‘Tempo de Atendimento : ’, FINAL);
+	writeln(‘Total de Cliente ’, totcli);
+	writeln(‘Tempo total de espera’, espera);
+	writeln(‘Tempo medio de espera’, (espera/totcli));
+end.
