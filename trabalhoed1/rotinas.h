@@ -1,7 +1,7 @@
 #include <stdlib.h>
 #include <time.h>
 
-int ClienteChegou() { return rand() % 3; }
+int ClienteChegou() { return (rand() % 3) == 0; }
 
 int Transacao() {
 

@@ -2,7 +2,7 @@
 #include "tad_fila_estatica_circular.h"
 #include <stdio.h>
 
-#define FINAL 100
+#define FINAL 40
 
 int espera, totcli, client;
 int caixa[3] = {0, 0, 0};
@@ -18,11 +18,23 @@ int main(void) {
 
   iniciarFila(&fila);
 
+  printf("INICIO\n\n");
   while (crono.campo < FINAL) {
+
+    // teste
+    printf("FILA: ");
+    exibir(&fila);
+    printf("\n");
 
     if (ClienteChegou()) {
 
       inserir(&fila, crono);
+
+      // teste
+      printf("Cliente entrou na fila.\n");
+      printf("FILA: ");
+      exibir(&fila);
+      printf("\n");
 
       totcli++;
     }
@@ -32,6 +44,12 @@ int main(void) {
       if (!chkFilaVazia(&fila) && caixa[i] == 0) {
 
         client = remover(&fila);
+
+        // teste
+        printf("Cliente saiu da fila.\n");
+        printf("FILA: ");
+        exibir(&fila);
+        printf("\n");
 
         espera += (crono.campo - client);
 
@@ -47,8 +65,10 @@ int main(void) {
     }
 
     crono.campo++;
+    printf("\n************************\nCRONOMETRO: %d\n", crono.campo);
   }
 
+  printf("\n");
   printf("Tempo de atendimento: %d\n", FINAL);
   printf("Total de clientes: %d\n", totcli);
   printf("Tempo total de espera: %d\n", espera);
